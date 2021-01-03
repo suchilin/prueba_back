@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  prueba_api:
+    container_name: prueba_api
+    image: prueba_api
+    build:
+      context: ./
+    command: npm run dev
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://prueba:secretpassword@mongodb:27017/pruebadb
+      APP_SECRET: UaejRSni9bajOgVcLFdixZnN04uR2p3l
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      pruebanet:
+        ipv4_address: 172.10.0.2
+  mongodb:
+    image: prueba_mongodb
+    container_name: prueba_mongodb
+    build:
+      context: ../mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: supersecret
+      MONGO_INITDB_DATABASE: admin
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    networks:
+      pruebanet:
+        ipv4_address: 172.10.0.3
+networks:
+  pruebanet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.10.0.0/16
