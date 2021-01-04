@@ -10,14 +10,25 @@ export const listCars = async (
 ): Promise<Response> => {
   let cars = await Car.find();
   const total = cars.length;
+  let newCars = [];
   if (total > 0) {
-    cars = cars.map((car: ICar) => {
-      return { maker: car.maker, model: car.submodel, image: car.image };
-    });
+    for (let car of cars) {
+      const maintenance = await Maintenance.findOne({ car: car.id });
+      console.log(maintenance);
+      newCars.push({
+        id: car.id,
+        maker: car.maker,
+        model: car.submodel,
+        image: car.image,
+        person: maintenance ? maintenance.person : null,
+        description: maintenance ? maintenance.description : null,
+        estimatedDate: maintenance ? maintenance.estimatedDate : null,
+      });
+    }
   }
   return res
     .status(201)
-    .json({ message: "Autos listados correctamente", total, data: cars });
+    .json({ message: "Autos listados correctamente", total, data: newCars });
 };
 
 export const saveCar = async (

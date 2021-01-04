@@ -31,14 +31,25 @@ const maintenance_validator_1 = __importDefault(require("../validators/maintenan
 const listCars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let cars = yield car_1.default.find();
     const total = cars.length;
+    let newCars = [];
     if (total > 0) {
-        cars = cars.map((car) => {
-            return { maker: car.maker, model: car.submodel, image: car.image };
-        });
+        for (let car of cars) {
+            const maintenance = yield maintain_1.default.findOne({ car: car.id });
+            console.log(maintenance);
+            newCars.push({
+                id: car.id,
+                maker: car.maker,
+                model: car.submodel,
+                image: car.image,
+                person: maintenance ? maintenance.person : null,
+                description: maintenance ? maintenance.description : null,
+                estimatedDate: maintenance ? maintenance.estimatedDate : null,
+            });
+        }
     }
     return res
         .status(201)
-        .json({ message: "Autos listados correctamente", total, data: cars });
+        .json({ message: "Autos listados correctamente", total, data: newCars });
 });
 exports.listCars = listCars;
 const saveCar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

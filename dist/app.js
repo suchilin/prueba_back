@@ -15,7 +15,7 @@ app.set("port", process.env.PORT || 3000);
 app.use(morgan_1.default("dev"));
 app.use(cors_1.default());
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use(express_1.default.json());
+app.use(express_1.default.json({ limit: "50mb" }));
 app.use(passport_1.default.initialize());
 passport_1.default.use(passport_2.default);
 app.get("/ping", (_, res) => {
