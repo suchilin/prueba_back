@@ -42,7 +42,8 @@ export const signIn = async (req: Request, res: Response) => {
   if (!user) {
     return res.status(400).json({ message: "El usuario no se encuentra" });
   }
-  const valid = bcrypt.compare(password, user.password);
+  const valid = await bcrypt.compare(password, user.password);
+  console.log("VALID PASSWORD", valid);
   if (!valid) {
     return res.status(401).json({ message: "Credenciales erroneas" });
   }

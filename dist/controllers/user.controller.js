@@ -49,7 +49,8 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!user) {
         return res.status(400).json({ message: "El usuario no se encuentra" });
     }
-    const valid = bcrypt_1.default.compare(password, user.password);
+    const valid = yield bcrypt_1.default.compare(password, user.password);
+    console.log("VALID PASSWORD", valid);
     if (!valid) {
         return res.status(401).json({ message: "Credenciales erroneas" });
     }
